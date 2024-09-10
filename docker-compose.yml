@@ -10,16 +10,20 @@ services:
     expose:
       - 6379
   server:
+    image: ls-yolov8-backend:0.1.0
     container_name: label-studio-ml
     build: .
     environment:
       - PYTHONUNBUFFERED=0
-      - MODEL_DIR=/data/models
       - RQ_QUEUE_NAME=default
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - LABEL_STUDIO_USE_REDIS=true
-      - MODEL_DIR = '/data/models'
+      - MODEL_DIR=/data/models
+      - MODEL_TYPE=det
+      - MODEL_FILE_PATH=/data/models/best.pt
+      - LS_URL=http://192.168.99.111:8080
+      - LS_API_TOKEN=9d847b67a229c86b8ce74600808bc53c104112ea
 
     ports:
       - 9090:9090
@@ -28,5 +32,4 @@ services:
     links:
       - redis
     volumes:
-      - "./data/server:/data"
-      - "./logs:/tmp"
+      - "./data/models:/data/models"

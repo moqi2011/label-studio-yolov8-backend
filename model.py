@@ -11,14 +11,12 @@ from ultralytics import YOLO
 from label_studio_ml.model import LabelStudioMLBase
 from label_studio_ml.utils import get_single_tag_keys, get_local_path
 
-
 # hostname = socket.gethostname()
 # LS_URL = socket.gethostbyname(hostname)
 # print("Hostname: ", hostname)
 # print("IP Address: ", ip_address)
 
-LS_URL = "http://192.168.100.3:8080"
-LS_API_TOKEN = "201a66049e8438c587125d8163d2d60538f067d5"
+from settings import LS_URL, LS_API_TOKEN, MODEL_FILE_PATH
 
 
 # Initialize class inhereted from LabelStudioMLBase
@@ -32,7 +30,7 @@ class YOLOv8Model(LabelStudioMLBase):
             self.parsed_label_config, 'PolygonLabels', 'Image')
         self.labels = ['capsules', 'tablets']
         # Load model
-        self.model = YOLO("best_seg.pt")
+        self.model = YOLO(MODEL_FILE_PATH)
 
     # Function to predict
     def predict(self, tasks, **kwargs):
@@ -67,10 +65,9 @@ class YOLOv8Model(LabelStudioMLBase):
         # Getting mask segments, boxes from model prediction
         for result in results:
             for i, (box, segm) in enumerate(zip(result.boxes, result.masks.xy)):
-
                 # 2D array with poligon points
                 polygon_points = segm / \
-                    np.array([original_width, original_height]) * 100
+                                 np.array([original_width, original_height]) * 100
 
                 polygon_points = polygon_points.tolist()
 

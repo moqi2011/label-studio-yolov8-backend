@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM ultralytics/ultralytics:8.2.91-python
 
 WORKDIR /tmp
 COPY requirements.txt .
